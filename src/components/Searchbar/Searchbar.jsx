@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import styles from 'components/Searchbar/Searchbar.module.css'
 
 export const Searchbar = ({search, onSubmitSearch, onChangeSearch}) => {
@@ -18,4 +19,10 @@ export const Searchbar = ({search, onSubmitSearch, onChangeSearch}) => {
       />
     </form>
   </header>
+}
+
+Searchbar.propTypes = {
+  search: PropTypes.string.isRequired,
+  onSubmitSearch: PropTypes.func.isRequired,
+  onChangeSearch: PropTypes.func.isRequired
 }

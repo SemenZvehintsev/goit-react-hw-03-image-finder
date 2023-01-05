@@ -42,14 +42,6 @@ export class App extends Component {
 
   handleLoadMore = () => {
     this.getImages();
-    this.autoScroll()
-  }
-
-  autoScroll = () => {
-    const interval = setInterval(() => {
-      window.scrollBy(0, 10)
-      if (document.documentElement.clientHeight + window.pageYOffset === document.body.offsetHeight) { clearInterval(interval)  }
-    }, 10)
   }
 
   handleSearch = (event) => {
