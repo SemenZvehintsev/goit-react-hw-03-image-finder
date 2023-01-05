@@ -66,6 +66,16 @@ export class App extends Component {
     }
   }
 
+  componentDidUpdate(_, newimages) {
+    if (this.state.images.length > newimages.images.length) {   
+    const interval = setInterval(() => {
+        console.log(document.documentElement.clientHeight, window.pageYOffset, document.body.offsetHeight)
+        window.scrollBy(0, 10)
+        if (document.documentElement.clientHeight + window.pageYOffset === document.body.offsetHeight) {
+            clearInterval(interval)}
+    }, 10)}
+}
+
   render() {
     const {images, total, search, isLoading, imageId} = this.state;
 
