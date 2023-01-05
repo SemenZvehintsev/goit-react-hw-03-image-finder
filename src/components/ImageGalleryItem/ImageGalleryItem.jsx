@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import styles from 'components/ImageGalleryItem/ImageGalleryItem.module.css'
 
 export const ImageGalleryItem = ({id, previewImage, description, modalOpen}) => {
-    console.log(description)
     return <li className={styles.galleryItem}>
         <img className={styles.galleryItemImage} id={id} onClick={modalOpen} src={previewImage} alt={description} />
     </li>
