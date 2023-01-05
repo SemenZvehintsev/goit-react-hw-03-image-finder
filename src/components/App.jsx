@@ -30,25 +30,36 @@ export class App extends Component {
           orientation: 'horizontal',
           per_page: 12
         }});
-      console.log(data)
-      this.setState({images: data.hits, total: data.totalHits, isLoading: false})
-    } catch (error) {
+      this.setState(({images, page}) =>
+      ({images: [...images, ...data.hits], 
+        page: page + 1, 
+        total: data.total, 
+        isLoading: false}))
+      } catch (error) {
       console.error(error);
     }
   }
 
-  handleLoadMore(){
-    // this.setState(({page}) => {return page = page + 1})
-    // this.getImages();
+  handleLoadMore = () => {
+    this.getImages();
+    this.autoScroll()
+  }
+
+  autoScroll = () => {
+    const interval = setInterval(() => {
+      window.scrollBy(0, 10)
+      if (document.documentElement.clientHeight + window.pageYOffset === document.body.offsetHeight) { clearInterval(interval)  }
+    }, 10)
   }
 
   handleSearch = (event) => {
     const {value} = event.target;
-    this.setState({search: value})
+    this.setState({search: value, images: []})
   }
 
   handleSubmitSearch = (event) => {
     event.preventDefault();
+    this.setState({images: [], page: 1})
     this.getImages();
   }
 
@@ -76,7 +87,7 @@ export class App extends Component {
       <Searchbar onSubmitSearch={this.handleSubmitSearch} onChangeSearch={this.handleSearch} search={search}/>
       {images && <ImageGallery images={images} modalOpen={this.handleModalOpen}/>}
       {isLoading && <Loader/>}
-      {(images.length < total) && <Button loadMore={this.handleLoadMore}/>}
+      {images.length < total && images.length > 0 && <Button loadMore={this.handleLoadMore}/>}
       {imageId && <Modal image={filterById()} close={this.handleModalClose}/>}
     </div>
   )}
