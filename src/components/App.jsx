@@ -15,7 +15,7 @@ export class App extends Component {
     search: '',
     isLoading: false,
     imageId: '',
-    page: 1
+    page: null
   }
 
   async getImages () {
@@ -30,9 +30,11 @@ export class App extends Component {
           orientation: 'horizontal',
           per_page: 12
         }});
+      const {hits} = data;
+      const newImages = hits.map((hit) => 
+      {return hit = {id: hit.id, webformatURL: hit.webformatURL, tags: hit.tags, largeImageURL: hit.largeImageURL}})
       this.setState(({images, page}) =>
-      ({images: [...images, ...data.hits], 
-        page: page + 1, 
+      ({images: [...images, ...newImages], 
         total: data.total, 
         isLoading: false}))
       } catch (error) {
@@ -41,18 +43,13 @@ export class App extends Component {
   }
 
   handleLoadMore = () => {
-    this.getImages();
+    this.setState(({page}) => ({page: page + 1}))
   }
 
-  handleSearch = (event) => {
-    const {value} = event.target;
-    this.setState({search: value, images: []})
-  }
 
   handleSubmitSearch = (event) => {
     event.preventDefault();
-    this.setState({images: [], page: 1})
-    this.getImages();
+    this.setState({images: [], page: 1, search: event.target.text.value})
   }
 
   handleModalOpen = (event) => {
@@ -67,6 +64,11 @@ export class App extends Component {
   }
 
   componentDidUpdate(_, prevstate) {
+    
+    if (this.state.page !== prevstate.page || this.state.search !== prevstate.search) {
+      this.getImages();
+    }
+
     if (this.state.images.length > prevstate.images.length) {   
     const interval = setInterval(() => {
         window.scrollBy(0, 10)
@@ -76,7 +78,7 @@ export class App extends Component {
   }
 
   render() {
-    const {images, total, search, isLoading, imageId} = this.state;
+    const {images, total, isLoading, imageId} = this.state;
 
     const filterById = () => {
       const filteredImages = images.filter(image => Number(image.id) === Number(imageId))
@@ -85,8 +87,8 @@ export class App extends Component {
 
     return (
     <div className={styles.app}>
-      <Searchbar onSubmitSearch={this.handleSubmitSearch} onChangeSearch={this.handleSearch} search={search}/>
-      {images && <ImageGallery images={images} modalOpen={this.handleModalOpen}/>}
+      <Searchbar onSubmitSearch={this.handleSubmitSearch}/>
+      {images.length > 0 && <ImageGallery images={images} modalOpen={this.handleModalOpen}/>}
       {isLoading && <Loader/>}
       {images.length < total && images.length > 0 && <Button loadMore={this.handleLoadMore}/>}
       {imageId && <Modal image={filterById()} close={this.handleModalClose}/>}

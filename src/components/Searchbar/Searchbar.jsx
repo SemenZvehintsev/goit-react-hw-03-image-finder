@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import styles from 'components/Searchbar/Searchbar.module.css'
 
-export const Searchbar = ({search, onSubmitSearch, onChangeSearch}) => {
+export const Searchbar = ({onSubmitSearch}) => {
     return <header className={styles.searchbar}>
     <form className={styles.searchForm} onSubmit={onSubmitSearch}>
       <button className={styles.searchFormButton} type="submit">
@@ -10,19 +10,16 @@ export const Searchbar = ({search, onSubmitSearch, onChangeSearch}) => {
   
       <input
         className={styles.searchFormInput}
+        name="text"
         type="text"
         autoComplete="off"
-        value={search}
         autoFocus
         placeholder="Search images and photos"
-        onChange={onChangeSearch}
       />
     </form>
   </header>
 }
 
 Searchbar.propTypes = {
-  search: PropTypes.string.isRequired,
   onSubmitSearch: PropTypes.func.isRequired,
-  onChangeSearch: PropTypes.func.isRequired
 }
