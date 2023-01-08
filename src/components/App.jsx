@@ -1,6 +1,7 @@
 import { Component } from "react";
 import axios from "axios";
 import styles from 'components/App.module.css';
+import { params } from "tools/params";
 import {Searchbar} from './Searchbar/Searchbar';
 import {ImageGallery} from './ImageGallery/ImageGallery';
 import {Loader} from './Loader/Loader';
@@ -25,10 +26,7 @@ export class App extends Component {
         params: {
           q: this.state.search,
           page: this.state.page,
-          key: '31495001-d7fca89852a5b5217d905cd4a',
-          image_type: 'photo',
-          orientation: 'horizontal',
-          per_page: 12
+          ...params
         }});
       const {hits} = data;
       const newImages = hits.map((hit) => 
@@ -90,7 +88,7 @@ export class App extends Component {
       <Searchbar onSubmitSearch={this.handleSubmitSearch}/>
       {images.length > 0 && <ImageGallery images={images} modalOpen={this.handleModalOpen}/>}
       {isLoading && <Loader/>}
-      {images.length < total && images.length > 0 && <Button loadMore={this.handleLoadMore}/>}
+      {!isLoading && images.length < total && images.length > 0 && <Button loadMore={this.handleLoadMore}/>}
       {imageId && <Modal image={filterById()} close={this.handleModalClose}/>}
     </div>
   )}
